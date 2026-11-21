@@ -1,0 +1,19 @@
+__pycache__/
+*.pyc
+.venv/
+venv/
+.pytest_cache/
+.ipynb_checkpoints/
+.DS_Store
+*.pkl
+data/raw/
+raw/
+# secrets and local data - never commit
+.env
+.env.*
+!.env.example
+instance/
+*.db
+*.sqlite3
+*.pem
+*.key

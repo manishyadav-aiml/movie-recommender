@@ -1,0 +1,163 @@
+{% extends "base.html" %}
+{% block body %}
+<header class="site-header">
+  <div class="container header-inner">
+    <a class="brand" href="/">🎬 MovieMatch</a>
+    <nav id="site-nav" class="site-nav" aria-label="Main">
+      <a href="#recommend" data-tab-link="similar">Similar movies</a>
+      <a href="#recommend" data-tab-link="taste">My taste</a>
+      <a href="#recommend" data-tab-link="top">Top rated</a>
+      <a href="#faq">FAQ</a>
+      {% if feedback_enabled %}<a href="#contact" id="nav-contact">Contact</a>{% endif %}
+    </nav>
+    <div class="header-actions">
+      <button id="theme-toggle" class="icon-btn" type="button" aria-label="Switch to dark mode" aria-pressed="false">🌙</button>
+      <button id="menu-toggle" class="icon-btn menu-toggle" type="button" aria-expanded="false"
+              aria-controls="site-nav" aria-label="Open menu">☰</button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+  <section class="hero">
+    <div class="container narrow center">
+      <h1>Find your next favourite movie</h1>
+      <p class="lead">Recommendations learned from {{ '{:,}'.format(n_ratings) }} real ratings of {{ '{:,}'.format(n_movies) }} movies.</p>
+      <form id="search-form" class="search" role="search" autocomplete="off">
+        <label for="search-input" class="sr-only">Search for a movie you like</label>
+        <div class="search-box">
+          <input id="search-input" type="search" maxlength="120" placeholder="Search a movie you like, e.g. The Matrix"
+                 role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="suggestions" required>
+          <ul id="suggestions" class="suggestions" role="listbox" hidden></ul>
+        </div>
+        <button class="btn primary" type="submit">Recommend</button>
+      </form>
+    </div>
+  </section>
+
+  <section id="recommend" class="container">
+    <div class="filters" aria-label="Filters">
+      <label>Genre
+        <select id="genre"><option value="Any">Any genre</option></select>
+      </label>
+      <label>Minimum ratings
+        <select id="min-ratings">
+          <option value="10">10+</option><option value="20" selected>20+</option>
+          <option value="50">50+</option><option value="100">100+</option><option value="200">200+</option>
+        </select>
+      </label>
+      <label>Results
+        <select id="count">
+          <option>5</option><option selected>10</option><option>15</option><option>20</option>
+        </select>
+      </label>
+    </div>
+
+    <div class="tabs" role="tablist" aria-label="Recommendation modes">
+      <button role="tab" id="tab-similar" data-tab="similar" aria-selected="true" aria-controls="panel-similar">Similar movies</button>
+      <button role="tab" id="tab-taste" data-tab="taste" aria-selected="false" aria-controls="panel-taste" tabindex="-1">My taste</button>
+      <button role="tab" id="tab-top" data-tab="top" aria-selected="false" aria-controls="panel-top" tabindex="-1">Top rated</button>
+    </div>
+
+    <div id="panel-similar" role="tabpanel" aria-labelledby="tab-similar">
+      <div class="panel-head"><h2 id="similar-title">Search a movie above to see similar ones</h2>
+        <button class="btn ghost small copy-btn" type="button" data-copy-target="similar" hidden>Copy list</button></div>
+      <div id="results-similar" class="results" aria-live="polite"></div>
+    </div>
+
+    <div id="panel-taste" role="tabpanel" aria-labelledby="tab-taste" hidden>
+      <div class="card">
+        <h2>Build your taste profile</h2>
+        <p class="muted">Add movies you have seen and rate them. Your ratings stay in this browser only; they are never stored on the server.</p>
+        <div class="search-box">
+          <label for="taste-input" class="sr-only">Add a movie you have seen</label>
+          <input id="taste-input" type="search" maxlength="120" placeholder="Add a movie you have seen…"
+                 role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="taste-suggestions" autocomplete="off">
+          <ul id="taste-suggestions" class="suggestions" role="listbox" hidden></ul>
+        </div>
+        <ul id="taste-list" class="taste-list"></ul>
+        <p id="taste-empty" class="muted">No movies added yet.</p>
+        <div class="row">
+          <button id="taste-go" class="btn primary" type="button">Get my recommendations</button>
+          <button id="taste-clear" class="btn ghost" type="button">Clear all</button>
+        </div>
+      </div>
+      <div class="panel-head"><h2>Recommended for you</h2>
+        <button class="btn ghost small copy-btn" type="button" data-copy-target="taste" hidden>Copy list</button></div>
+      <div id="results-taste" class="results" aria-live="polite"></div>
+    </div>
+
+    <div id="panel-top" role="tabpanel" aria-labelledby="tab-top" hidden>
+      <div class="panel-head"><h2>Top rated movies</h2>
+        <button class="btn ghost small copy-btn" type="button" data-copy-target="top" hidden>Copy list</button></div>
+      <p class="muted">Ranked with a weighted rating so movies with few votes do not dominate.</p>
+      <div id="results-top" class="results" aria-live="polite"></div>
+    </div>
+  </section>
+
+  <section id="faq" class="container narrow">
+    <h2>Frequently asked questions</h2>
+    <details><summary>How does it work?</summary>
+      <p>It combines item-based collaborative filtering (people who liked this also liked that), genre similarity and a small popularity boost.</p></details>
+    <details><summary>What does the similarity score mean?</summary>
+      <p>It is a 0–100% match between the movie you chose and each suggestion, blended from the three signals above. Higher is closer.</p></details>
+    <details><summary>Is my data stored?</summary>
+      <p>Your taste profile and theme choice live in your browser only. We store a message only if you send us feedback.</p></details>
+    <details><summary>Where does the data come from?</summary>
+      <p>MovieLens, published by GroupLens Research at the University of Minnesota.</p></details>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <p>Dataset: <strong>{{ dataset }}</strong> · Last updated: <time datetime="{{ last_updated }}">{{ last_updated }}</time></p>
+    <p class="muted">Data © GroupLens Research. Built by Manish Kumar Yadav.</p>
+  </div>
+</footer>
+
+<button id="to-top" class="fab fab-top" type="button" aria-label="Back to top" hidden>↑</button>
+{% if feedback_enabled %}<button id="contact-fab" class="fab fab-contact" type="button" aria-haspopup="dialog">💬 Feedback</button>{% endif %}
+
+<div id="cookie-banner" class="cookie" role="region" aria-label="Cookie notice" hidden>
+  <p>We use one essential session cookie for security, plus your browser's local storage for your theme and taste profile. No tracking or advertising cookies.</p>
+  <button id="cookie-ok" class="btn primary small" type="button">Got it</button>
+</div>
+
+{% if feedback_enabled %}
+<dialog id="contact-dialog" aria-labelledby="contact-title">
+  <form id="contact-form" novalidate>
+    <h2 id="contact-title">Send feedback</h2>
+    <div id="contact-fields">
+      <label for="c-name">Name</label>
+      <input id="c-name" name="name" required maxlength="80" autocomplete="name">
+      <label for="c-email">Email</label>
+      <input id="c-email" name="email" type="email" required maxlength="120" autocomplete="email">
+      <label for="c-message">Message</label>
+      <textarea id="c-message" name="message" rows="4" required minlength="10" maxlength="1000"></textarea>
+      <input class="hp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <p id="contact-error" class="form-error" role="alert" hidden></p>
+      <div class="dialog-actions">
+        <button type="button" id="contact-cancel" class="btn ghost">Cancel</button>
+        <button type="submit" id="contact-submit" class="btn primary">Send</button>
+      </div>
+    </div>
+    <div id="contact-success" class="form-success" role="status" hidden>
+      <h3>Thank you! ✅</h3><p>Your message was sent.</p>
+      <button type="button" id="contact-close" class="btn primary">Close</button>
+    </div>
+  </form>
+</dialog>
+{% endif %}
+
+<dialog id="confirm-dialog" aria-labelledby="confirm-title">
+  <form method="dialog">
+    <h2 id="confirm-title">Please confirm</h2>
+    <p id="confirm-message"></p>
+    <div class="dialog-actions">
+      <button value="cancel" class="btn ghost">Cancel</button>
+      <button value="ok" class="btn danger">Yes, continue</button>
+    </div>
+  </form>
+</dialog>
+{% endblock %}
+{% block scripts %}<script src="{{ url_for('static', filename='js/app.js') }}" defer></script>{% endblock %}

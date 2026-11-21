@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}Admin · Feedback · MovieMatch{% endblock %}
+{% block body %}
+<header class="site-header"><div class="container header-inner">
+  <a class="brand" href="/">🎬 MovieMatch</a>
+  <form method="post" action="{{ url_for('admin_logout') }}">
+    <input type="hidden" name="csrf_token" value="{{ csrf }}">
+    <button class="btn ghost" type="submit">Sign out</button>
+  </form>
+</div></header>
+<main id="main" class="container">
+  <h1>Feedback messages <span class="badge">{{ rows|length }}</span></h1>
+  {% if not rows %}<p class="muted">No messages yet.</p>{% endif %}
+  <div class="table-wrap">
+  {% if rows %}
+  <table class="table">
+    <thead><tr><th>Date (UTC)</th><th>Name</th><th>Email</th><th>Message</th><th>Source</th><th></th></tr></thead>
+    <tbody>
+    {% for r in rows %}
+      <tr>
+        <td>{{ r['created_at'] }}</td><td>{{ r['name'] }}</td><td>{{ r['email'] }}</td>
+        <td class="msg">{{ r['message'] }}</td>
+        <td>{{ r['utm_source'] or '–' }}{% if r['utm_medium'] %} / {{ r['utm_medium'] }}{% endif %}</td>
+        <td>
+          <form method="post" action="{{ url_for('admin_delete', fid=r['id']) }}" data-confirm-form>
+            <input type="hidden" name="csrf_token" value="{{ csrf }}">
+            <button class="btn danger small" type="submit">Delete</button>
+          </form>
+        </td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  {% endif %}
+  </div>
+</main>
+<dialog id="confirm-dialog" aria-labelledby="confirm-title">
+  <form method="dialog">
+    <h2 id="confirm-title">Please confirm</h2>
+    <p id="confirm-message">Delete this message permanently?</p>
+    <div class="dialog-actions">
+      <button value="cancel" class="btn ghost">Cancel</button>
+      <button value="ok" class="btn danger">Delete</button>
+    </div>
+  </form>
+</dialog>
+{% endblock %}
+{% block scripts %}<script src="{{ url_for('static', filename='js/admin.js') }}" defer></script>{% endblock %}

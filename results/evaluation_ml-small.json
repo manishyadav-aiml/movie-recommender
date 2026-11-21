@@ -1,0 +1,44 @@
+{
+  "info": {
+    "dataset": "ml-small",
+    "users": 300,
+    "k": 10,
+    "seed": 42,
+    "train_ratings": 72316,
+    "test_ratings": 17958
+  },
+  "results": [
+    {
+      "model": "Popularity baseline",
+      "precision@10": 0.1263,
+      "recall@10": 0.1008,
+      "hit_rate@10": 0.6433,
+      "ndcg@10": 0.1591,
+      "coverage": 0.0126
+    },
+    {
+      "model": "Content only (genres)",
+      "precision@10": 0.042,
+      "recall@10": 0.0406,
+      "hit_rate@10": 0.3,
+      "ndcg@10": 0.0521,
+      "coverage": 0.2238
+    },
+    {
+      "model": "Collaborative only",
+      "precision@10": 0.1623,
+      "recall@10": 0.1228,
+      "hit_rate@10": 0.6733,
+      "ndcg@10": 0.2055,
+      "coverage": 0.1337
+    },
+    {
+      "model": "Hybrid (default)",
+      "precision@10": 0.1623,
+      "recall@10": 0.1347,
+      "hit_rate@10": 0.7133,
+      "ndcg@10": 0.2152,
+      "coverage": 0.149
+    }
+  ]
+}

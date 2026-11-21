@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="csrf-token" content="{{ csrf }}">
+  <meta name="color-scheme" content="light dark">
+  <meta name="description" content="Hybrid movie recommendations from real MovieLens ratings.">
+  <title>{% block title %}MovieMatch · Movie Recommendation System{% endblock %}</title>
+  <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <div id="progress" class="progress" aria-hidden="true"></div>
+  {% block body %}{% endblock %}
+  <script src="{{ url_for('static', filename='js/common.js') }}" defer></script>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

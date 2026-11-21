@@ -1,0 +1,19 @@
+# Not needed at runtime - keeps the serverless bundle small
+tests/
+notebooks/
+docs/
+results/
+scripts/
+.github/
+streamlit_app.py
+cli.py
+Dockerfile
+.dockerignore
+requirements-dev.txt
+requirements-streamlit.txt
+README.md
+instance/
+raw/
+# Ship only the small dataset (fast cold starts); the app picks whatever is present
+data/processed/ml-1m/
+data/processed/ml-25m-top/
